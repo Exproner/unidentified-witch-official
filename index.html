@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Unidentified Witch</title>
+  <style>
+    /* Lingkaran Biru (Font TTF) */
+@font-face {
+  font-family: 'CinzelDecorative';
+  src: url('CinzelDecorative-Bold.ttf') format('truetype');
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #fff;
+}
+
+/* Splash Screen */
+#splash {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #223366; /* warna background splash */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999; /* biar di atas segalanya */
+  animation: fadeOut 2s ease 3s forwards; /* hilang setelah 3s */
+}
+
+.splash-title {
+  font-family: 'CinzelDecorative';
+  font-size: 48px;
+  color: #fff;
+  opacity: 0;
+  animation: fadeInZoom 2s ease forwards;
+}
+
+/* Animasi muncul (zoom + fade in) */
+@keyframes fadeInZoom {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Animasi hilang (fade out) */
+@keyframes fadeOut {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+
+/* HEADER */
+.header {
+  background: #223366;         /* warna background header */
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  color: #fff;
+}
+
+/* Teks judul dengan font TTF */
+.header .title {
+  font-family: 'CinzelDecorative';
+  font-size: 32px;
+  margin: 0;
+  color: #ffffff;
+  letter-spacing: 2px;
+  z-index: 1;
+}
+
+/* Ornament kiri & kanan */
+.header .ornament {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 50px; /* bisa disesuaikan */
+}
+
+.header .ornament.left {
+  left: 20px;
+}
+
+.header .ornament.right {
+  right: 20px;
+}
+
+/* Judul pakai font custom */
+.title {
+  font-family: 'CinzelDecorative';
+  text-align: center;
+  font-size: 40px;
+  color: #223366;
+}
+
+/* Hero image */
+.hero img {
+  width: 100%;
+  display: block;
+}
+
+/* pemutar playlist */
+.music-player {
+  max-width: 350px;
+  margin: 30px auto;
+  padding: 20px;
+  background: #223366;
+  color: white;
+  border-radius: 15px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  font-family: Arial, sans-serif;
+}
+
+.controls button, #togglePlaylist {
+  background: #fff;
+  border: none;
+  color: #223366;
+  padding: 8px 12px;
+  margin: 5px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.2s;
+}
+
+.controls button:hover, #togglePlaylist:hover {
+  background: #cfd8f6;
+}
+
+.info {
+  margin: 10px 0;
+  font-weight: bold;
+}
+
+.playlist {
+  margin-top: 15px;
+  text-align: left;
+  max-height: 150px;
+  overflow-y: auto;
+}
+
+.playlist ul {
+  list-style: none;
+  padding: 0;
+}
+
+.playlist li {
+  padding: 8px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background 0.2s;
+}
+
+.playlist li:hover {
+  background: rgba(255,255,255,0.1);
+}
+
+.playlist li.active {
+  background: rgba(255,255,255,0.3);
+  font-weight: bold;
+}
+
+/* sembunyikan daftar setelah lagu pertama */
+.playlist li.hidden {
+  display: none;
+}
+
+/* Note box */
+.notes {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;           /* jarak antar box */
+  margin: 40px auto;   /* jarak dengan section lain */
+}
+
+.note-box {
+  position: relative;
+  display: inline-block;
+}
+
+.note-box .frame {
+  width: 500px;   /* atur ukuran frame */
+  display: block;
+}
+
+.note-box .note-text {
+  position: absolute;
+  top: 75px;
+  left: 25px;
+  right: 25px;
+  font-size: 13px;
+  text-align: center;
+}
+.note-box:nth-child(1) {
+  top: 10px;
+  right: 210px;
+  z-index: 2;
+}
+
+.note-box:nth-child(2) {
+  top: -100px;     /* overlap pas */
+  left: 210px;
+  z-index: 1;
+}
+
+/* Tombol Volume */
+.button-wrapper {
+  display: flex;
+  justify-content: center;
+  margin: 40px 0;
+}
+
+.btn-volume {
+  display: flex;
+  align-items: center;      /* Vertikal tengah */
+  justify-content: center;  /* Horizontal tengah */
+  gap: 10px;                /* Jarak antar elemen */
+  background: #cfd8f6;
+  border-radius: 30px;
+  padding: 20px 40px;
+  text-decoration: none;
+  font-weight: bold;
+  color: #223366;
+  text-align: center;
+}
+
+.btn-volume img {
+  height: 30px;
+  vertical-align: middle;
+}
+
+/* Team Cards */
+.team-cards {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin: 30px;
+  flex-wrap: wrap; /* biar responsif kalau layar kecil */
+}
+
+.team-cards .card {
+  width: 150px;
+  height: 220px;
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  text-align: center;
+  overflow: hidden;
+  text-decoration: none;
+  color: #223366;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.team-cards .card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+}
+
+.team-cards .card img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover; /* gambar otomatis fit */
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+}
+
+.team-cards .card p {
+  margin: 10px 0;
+  font-weight: bold;
+}
+
+
+
+/* === Section Divider === */
+.section-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 15px 0;
+    position: relative;
+}
+.divider-line {
+    height: 5.5px;
+    width: 300px;
+    background: linear-gradient(to right, transparent, #223366, transparent);
+}
+.divider-icon {
+    margin: 0 12px;
+    color: #223366;
+    font-size: 25px;
+    animation: bounce 2s infinite;
+}
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+    40% { transform: translateY(-8px); }
+    60% { transform: translateY(-4px); }
+}
+
+/* Wrapper section dengan ornament pojok */
+.section-notes, .section-team {
+  position: relative;
+  margin: 40px auto;
+  padding: 40px 20px;
+  max-width: 1000px;
+  background: #fff;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+  border-radius: 10px;
+}
+
+/* Corner ornaments */
+.corner {
+  position: absolute;
+  width: 100px; /* atur sesuai ukuran PNG */
+  height: auto;
+}
+
+.corner.top-left { top: 0; left: 0; }
+.corner.top-right { top: 0; right: 0; }
+.corner.bottom-left { bottom: 0; left: 0; }
+.corner.bottom-right { bottom: 0; right: 0; }
+
+
+/* Footer */
+.footer {
+  background: #223366;
+  text-align: center;
+  padding: 20px;
+}
+
+.footer img {
+  margin: 0 35px;
+  height: 30px;
+}
+  </style>
+</head>
+<body>
+<!-- SPLASH SCREEN -->
+<div id="splash">
+  <h1 class="splash-title">UNIDENTIFIED WITCH</h1>
+</div>
+
+  <!-- HEADER -->
+  <header class="header">
+    <img src="asset/Bv1.png" alt="ornament kiri" class="ornament left">
+    <h1 class="title">UNIDENTIFIED WITCH</h1>
+    <img src="asset/Bv2.png" alt="ornament kanan" class="ornament right">
+  </header>
+
+  <!-- HERO IMAGE (Lingkaran Merah - gambar ilustrasi) -->
+  <section class="hero">
+    <img src="GIF PENYIHIR.gif" alt="Ilustrasi">
+  </section>
+
+<!-- 🎵 THEME SONG PLAYER -->
+<div class="music-player">
+  <audio id="audio" preload="metadata"></audio>
+  
+  <div class="controls">
+    <button id="prev">⏮</button>
+    <button id="play">▶️</button>
+    <button id="next">⏭</button>
+    <button id="repeat" data-mode="none">❌</button>
+  </div>
+  
+  <div class="info">
+    <span id="title">Pilih Lagu</span>
+  </div>
+
+  <div class="playlist">
+    <ul id="playlist"></ul>
+    <button id="togglePlaylist">Lihat Semua ▼</button>
+  </div>
+</div>
+
+<script>
+const songs = [
+  { title: "Mermaid Siren Song", src: "mermaidsirensong.mp3" },
+  { title: "Opening Theme", src: "openingtheme.mp3" },
+  { title: "Battle Theme", src: "battletheme.mp3" },
+  { title: "Ending Theme", src: "endingtheme.mp3" }
+];
+
+const audio = document.getElementById("audio");
+const playBtn = document.getElementById("play");
+const prevBtn = document.getElementById("prev");
+const nextBtn = document.getElementById("next");
+const repeatBtn = document.getElementById("repeat");
+const title = document.getElementById("title");
+const playlistEl = document.getElementById("playlist");
+const toggleBtn = document.getElementById("togglePlaylist");
+
+let currentSong = 0;
+let isPlaying = false;
+let expanded = false;
+let repeatMode = "none"; // "none" | "all" | "one"
+
+// isi playlist ke HTML
+songs.forEach((song, i) => {
+  const li = document.createElement("li");
+  li.textContent = song.title;
+  if (i > 0) li.classList.add("hidden"); // selain lagu pertama, sembunyi dulu
+  li.addEventListener("click", () => loadSong(i, true));
+  playlistEl.appendChild(li);
+});
+
+// update active state
+function updateActiveSong() {
+  [...playlistEl.children].forEach((li, i) => {
+    li.classList.toggle("active", i === currentSong);
+  });
+}
+
+// load lagu
+function loadSong(index, autoplay = false) {
+  currentSong = index;
+  audio.src = songs[index].src;
+  title.textContent = songs[index].title;
+  updateActiveSong();
+  if (autoplay) {
+    audio.play();
+    isPlaying = true;
+    playBtn.textContent = "⏸";
+  }
+}
+
+// tombol play/pause
+playBtn.addEventListener("click", () => {
+  if (isPlaying) {
+    audio.pause();
+    playBtn.textContent = "▶️";
+  } else {
+    audio.play();
+    playBtn.textContent = "⏸";
+  }
+  isPlaying = !isPlaying;
+});
+
+// tombol prev
+prevBtn.addEventListener("click", () => {
+  currentSong = (currentSong - 1 + songs.length) % songs.length;
+  loadSong(currentSong, true);
+});
+
+// tombol next
+nextBtn.addEventListener("click", () => {
+  currentSong = (currentSong + 1) % songs.length;
+  loadSong(currentSong, true);
+});
+
+// tombol repeat
+repeatBtn.addEventListener("click", () => {
+  if (repeatMode === "none") {
+    repeatMode = "all";
+    repeatBtn.textContent = "🔁";
+  } else if (repeatMode === "all") {
+    repeatMode = "one";
+    repeatBtn.textContent = "🔂";
+  } else {
+    repeatMode = "none";
+    repeatBtn.textContent = "❌";
+  }
+});
+
+// auto next setelah lagu habis
+audio.addEventListener("ended", () => {
+  if (repeatMode === "one") {
+    audio.currentTime = 0;
+    audio.play();
+  } else if (repeatMode === "all") {
+    currentSong = (currentSong + 1) % songs.length;
+    loadSong(currentSong, true);
+  } else {
+    // mode none
+    if (currentSong < songs.length - 1) {
+      currentSong++;
+      loadSong(currentSong, true);
+    }
+  }
+});
+
+// tombol lihat semua / sembunyikan
+toggleBtn.addEventListener("click", () => {
+  expanded = !expanded;
+  [...playlistEl.children].forEach((li, i) => {
+    if (i > 0) li.classList.toggle("hidden", !expanded);
+  });
+  toggleBtn.textContent = expanded ? "Sembunyikan ▲" : "Lihat Semua ▼";
+});
+
+// load pertama
+loadSong(0, false);
+</script>
+
+  <!-- Divider ATAS Notes -->
+<div class="section-divider">
+  <div class="divider-line"></div>
+  <div class="divider-icon">✦</div>
+  <div class="divider-line"></div>
+</div>
+  <!-- SECTION NOTES -->
+<section class="section-notes">
+  <!-- Corner ornaments -->
+  <img src="asset/corner-top-left.png" class="corner top-left" alt="">
+  <img src="asset/hiasan.png" class="corner top-right" alt="">
+  <img src="asset/hiasan1.png" class="corner bottom-left" alt="">
+  <img src="asset/corner-bottom-right.png" class="corner bottom-right" alt="">
+
+  <div class="notes">
+    <div class="note-box">
+      <img src="asset/border.png" alt="Frame" class="frame">
+      <div class="note-text">
+        <h2>CATATAN SANG AUTHOR</h2>
+        <p>Mantap dah pokoknya, jangan lupa like comment and skrikeb!!!</p>
+      </div>
+    </div>
+
+    <div class="note-box">
+      <img src="asset/border.png" alt="Frame" class="frame">
+      <div class="note-text">
+        <h2>PEMBERITAHUAN</h2>
+        <p>sabar ya kawan... nunggu chapter lanjutannya, seperti kalian nunggu kelanjutan chapter berserk dan hunterxhunter</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Divider BAWAH Notes -->
+<div class="section-divider">
+  <div class="divider-line"></div>
+  <div class="divider-icon">✦</div>
+  <div class="divider-line"></div>
+</div>
+
+  <!-- BUTTON VOLUME 1 -->
+  <div class="button-wrapper">
+    <!-- Lingkaran Hitam (shape tombol dari CSS) -->
+    <a href="#" class="btn-volume">
+      <img src="asset/Av1.png" alt="">
+      <span>VOLUME 1 SEDANG BERLANGSUNG! <br> Klik Disini</span>
+      <img src="asset/Av2.png" alt="">
+    </a>
+  </div>
+
+  
+<!-- Divider ATAS Team -->
+<div class="section-divider">
+  <div class="divider-line"></div>
+  <div class="divider-icon">✦</div>
+  <div class="divider-line"></div>
+</div>
+<!-- SECTION TEAM -->
+<section class="section-team">
+  <!-- Corner ornaments -->
+  <img src="asset/corner-top-left.png" class="corner top-left" alt="">
+  <img src="asset/hiasan.png" class="corner top-right" alt="">
+  <img src="asset/hiasan1.png" class="corner bottom-left" alt="">
+  <img src="asset/corner-bottom-right.png" class="corner bottom-right" alt="">
+
+  <div class="team">
+    <h2 style="text-align:center; color:#223366;">TEAM PROJECT</h2>
+    <div class="team-cards">
+
+      <!-- Card 1 -->
+      <a href="https://www.instagram.com/ilhammgk_" target="_blank" class="card">
+        <img src="gilang.jpg" alt="Member 1">
+        <p>Gilang Ilham</p>
+      </a>
+
+      <!-- Card 2 -->
+      <a href="https://www.instagram.com/apta_walker345/" target="_blank" class="card">
+        <img src="apta.jpg" alt="Member 2">
+        <p>Apta Mahendra</p>
+      </a>
+
+      <!-- Card 3 -->
+      <a href="https://www.instagram.com/rifkitenkuuji" target="_blank" class="card">
+        <img src="rifki.jpg" alt="Member 3">
+        <p>Rifki Firdaus</p>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+
+  <!-- FOOTER ORNAMENT -->
+  <footer class="footer">
+    <img src="asset/B1v2.png" alt="">
+    <img src="asset/B.png" alt="">
+    <img src="asset/B1.png" alt="">
+  </footer>
+
+</body>
+</html>
